@@ -1,7 +1,7 @@
 .toast-message {
     position: fixed;
     top: 2rem;
-    right: 2rem;
+    left: 80%;
     min-width: 250px;
     max-width: 350px;
     z-index: 9999;
@@ -10,16 +10,17 @@
     pointer-events: none;
     transition: opacity 0.3s, transform 0.3s;
     transform: translateY(-20px);
-    display: block;
+    display: none;
     border: none;
     background: none;
     font-size: 1rem;
     font-family: inherit;
 }
 .toast-message.show {
-    opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 /* Custom button styles for better aesthetics */
 .btn {
@@ -67,14 +68,15 @@
     color: #1e40af;
     padding: 1rem;
     border-radius: 0.5rem;
-    position: relative;
+    position: fixed;
+    height: 10%;
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     font-size: 1rem;
     font-family: inherit;
     margin: 0;
     display: block;
 }
-}
+
 .message-box-error {
     background-color: #fee2e2;
     border: 1px solid #f87171;
@@ -126,3 +128,22 @@ canvas {
     /* Limit height for larger screens */
 }
 
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
