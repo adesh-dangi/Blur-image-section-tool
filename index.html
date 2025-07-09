@@ -51,6 +51,9 @@
         .btn-toggle {
             @apply bg-purple-600 text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75;
         }
+        .btn-download {
+            @apply bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75;
+        }
         .message-box {
             @apply bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative;
         }
@@ -80,6 +83,9 @@
             <button id="clearAreasBtn" class="btn btn-secondary w-full sm:w-auto" disabled>
                 Clear Areas
             </button>
+            <button id="downloadBlurredImageBtn" class="btn btn-download w-full sm:w-auto" disabled>
+                Download Blurred Image
+            </button>
         </div>
 
         <div class="relative w-full overflow-hidden rounded-md">
@@ -95,6 +101,7 @@
                 <li>Click "Define Sensitive Areas" again to stop drawing.</li>
                 <li>Use "Toggle Blur" to see the effect.</li>
                 <li>"Clear Areas" removes all defined sensitive regions.</li>
+                <li>Click "Download Blurred Image" to save the current blurred view.</li>
             </ol>
         </div>
     </div>
@@ -107,6 +114,7 @@
         const defineAreasBtn = document.getElementById('defineAreasBtn');
         const toggleBlurBtn = document.getElementById('toggleBlurBtn');
         const clearAreasBtn = document.getElementById('clearAreasBtn');
+        const downloadBlurredImageBtn = document.getElementById('downloadBlurredImageBtn'); // New button
         const messageContainer = document.getElementById('messageContainer');
 
         let originalImage = null; // Stores the uploaded image object
@@ -115,6 +123,7 @@
         let isBlurActive = true; // Flag to control blur state
         let startX, startY; // Starting coordinates for drawing rectangle
         let currentRect = null; // Stores the current rectangle being drawn
+        let originalFileName = 'blurred_image'; // To store the base name of the uploaded file
 
         // Variables to handle canvas scaling for responsiveness
         let scaleFactor = 1;
@@ -184,9 +193,13 @@
          */
         function redrawCanvas() {
             if (!originalImage) {
+                // Clear canvas if no image is loaded
                 ctx.clearRect(0, 0, imageCanvas.width / (window.devicePixelRatio || 1), imageCanvas.height / (window.devicePixelRatio || 1));
                 return;
             }
+
+            // Save the current state of the canvas context (before applying filters)
+            ctx.save();
 
             // Clear the canvas
             ctx.clearRect(0, 0, imageCanvas.width / (window.devicePixelRatio || 1), imageCanvas.height / (window.devicePixelRatio || 1));
@@ -219,12 +232,18 @@
                 ctx.lineWidth = 2;
                 ctx.strokeRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
             }
+
+            // Restore the canvas context to its state before this function was called
+            ctx.restore();
         }
 
         // Event listener for image upload
         imageUpload.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
+                // Store the original file name (without extension)
+                originalFileName = file.name.split('.').slice(0, -1).join('.') || 'image';
+
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = new Image();
@@ -237,6 +256,7 @@
                         defineAreasBtn.disabled = false;
                         toggleBlurBtn.disabled = false;
                         clearAreasBtn.disabled = false;
+                        downloadBlurredImageBtn.disabled = false; // Enable download button
                         showMessage('Image loaded successfully! Now define sensitive areas.', 'success');
                     };
                     img.onerror = () => {
@@ -350,6 +370,49 @@
             showMessage('All sensitive areas cleared.', 'success');
         });
 
+        // Event listener for "Download Blurred Image" button (NEW)
+        downloadBlurredImageBtn.addEventListener('click', () => {
+            if (!originalImage) {
+                showMessage('Please upload an image first.', 'info');
+                return;
+            }
+            if (sensitiveAreas.length === 0) {
+                showMessage('No sensitive areas defined to blur for download. Please define some first.', 'info');
+                return;
+            }
+
+            // Temporarily ensure blur is active for download
+            const wasBlurActive = isBlurActive;
+            if (!wasBlurActive) {
+                isBlurActive = true;
+                redrawCanvas(); // Redraw to apply blur before capturing
+            }
+
+            // Get the image data from the canvas
+            // Use image/png as it's widely supported and handles transparency well.
+            // The quality argument (0 to 1) is for JPEG/WebP, not PNG.
+            const imageDataURL = imageCanvas.toDataURL('image/png');
+
+            // Create a temporary link element
+            const a = document.createElement('a');
+            a.href = imageDataURL;
+            // Suggest a filename based on the original, appending '_blurred'
+            a.download = `${originalFileName}_blurred.png`;
+
+            // Programmatically click the link to trigger the download
+            document.body.appendChild(a); // Append to body is good practice for programmatic clicks
+            a.click();
+            document.body.removeChild(a); // Clean up the temporary link
+
+            // Revert blur state if it was changed for download
+            if (!wasBlurActive) {
+                isBlurActive = false;
+                redrawCanvas(); // Revert to original blur state
+            }
+            showMessage('Blurred image downloaded!', 'success');
+        });
+
+
         // Initial canvas setup and responsiveness
         window.addEventListener('resize', resizeCanvas);
         // Initial call to set up canvas dimensions if an image is already loaded (e.g., on refresh)
@@ -358,5 +421,3 @@
     </script>
 </body>
 </html>
-
-
