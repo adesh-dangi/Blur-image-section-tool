@@ -1,0 +1,149 @@
+.toast-message {
+    position: fixed;
+    top: 2rem;
+    left: 80%;
+    min-width: 250px;
+    max-width: 350px;
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateY(-20px);
+    display: none;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-family: inherit;
+}
+.toast-message.show {
+    pointer-events: auto;
+    transform: translateY(0);
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+   animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+/* Custom button styles for better aesthetics */
+.btn {
+    /* Tailwind utility classes for reference, not processed here */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btn-primary {
+    background-color: #2563eb;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #1f2937;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+.btn-toggle {
+    background-color: #9333ea;
+    color: #fff;
+}
+.btn-toggle:hover {
+    background-color: #7c3aed;
+}
+.btn-download {
+    background-color: #16a34a;
+    color: #fff;
+}
+.btn-download:hover {
+    background-color: #15803d;
+}
+.message-box {
+    background-color: #dbeafe;
+    border: 1px solid #60a5fa;
+    color: #1e40af;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    position: fixed;
+    height: 10%;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-size: 1rem;
+    font-family: inherit;
+    margin: 0;
+    display: block;
+}
+
+.message-box-error {
+    background-color: #fee2e2;
+    border: 1px solid #f87171;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    position: relative;
+}
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    /* rounded-xl */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    /* shadow-lg */
+    padding: 2rem;
+    /* p-8 */
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* gap-6 */
+}
+
+canvas {
+    border: 1px solid #e2e8f0;
+    /* border-gray-200 */
+    background-color: #f8fafc;
+    /* bg-gray-50 */
+    border-radius: 0.5rem;
+    /* rounded-md */
+    width: 100%;
+    /* Ensure canvas scales */
+    height: auto;
+    /* Maintain aspect ratio */
+    max-height: 60vh;
+    /* Limit height for larger screens */
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
