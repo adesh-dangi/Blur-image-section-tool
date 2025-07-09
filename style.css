@@ -10,16 +10,16 @@
     pointer-events: none;
     transition: opacity 0.3s, transform 0.3s;
     transform: translateY(-20px);
-    /* Prevent affecting layout */
-    position: fixed;
     display: block;
-}
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-family: inherit;
 }
 .toast-message.show {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
-}
 }
 /* Custom button styles for better aesthetics */
 .btn {
@@ -68,6 +68,12 @@
     padding: 1rem;
     border-radius: 0.5rem;
     position: relative;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    font-size: 1rem;
+    font-family: inherit;
+    margin: 0;
+    display: block;
+}
 }
 .message-box-error {
     background-color: #fee2e2;
